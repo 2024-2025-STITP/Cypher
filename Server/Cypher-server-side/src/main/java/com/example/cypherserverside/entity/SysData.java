@@ -1,13 +1,12 @@
 package com.example.cypherserverside.entity;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Data
 @Getter
 @Setter
 public class SysData {
@@ -35,7 +34,7 @@ public class SysData {
     private Map<String, Long> interfaceUsage = new HashMap<>();
 
     // Processes
-    private List<ProcessData> processes = new ArrayList<>();
+    private List<ProcessData> processes = new LinkedList<>();
 
     // GPU data (if applicable)
     private double gpuUsage;

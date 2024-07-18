@@ -14,9 +14,9 @@ public class VirtualHost {
 
     private String hostName;
 
-    private String hostPassword;
-
     private String hostIp;
+
+    private SysData virtualHostSysData;
 
     private Boolean hostStatus;
 }

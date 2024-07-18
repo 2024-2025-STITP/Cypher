@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -25,7 +26,7 @@ public class User {
     @Range(message = "最少要6个字符，最多40个字符", min = 6, max = 40)
     private String password;
 
-    private List<Host> linkHosts = new ArrayList<Host>();
+    private List<Host> linkHosts = new LinkedList<Host>();
 
     private Host myHost;
 
