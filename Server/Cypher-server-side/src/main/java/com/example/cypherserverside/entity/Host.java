@@ -19,15 +19,11 @@ public class Host {
 
     private String hostName;
 
-    private String hostPassword;
-
-    private String hostIp;
+    private String hostIP;
 
     private String macAddr;
 
     private List<VirtualHost> vHosts = new LinkedList<>();
-
-    private SysData hostSysData;
 
     private Boolean hostStatus;                 //表示是否能被监控
 

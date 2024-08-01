@@ -10,6 +10,7 @@ import java.util.*;
 @Getter
 @Setter
 public class SysData {
+    private long id;
     // CPU data
     private double cpuUsage;
     private double[] perCoreUsage;
@@ -45,5 +46,6 @@ public class SysData {
 
     // System uptime
     private long uptime; // in seconds
+
 
 }

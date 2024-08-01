@@ -1,13 +1,14 @@
 package com.example.cypherserverside.entity;
 
+import com.example.cypherserverside.utils.SaltMD5Utils;
+import jakarta.validation.constraints.Max;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+
 import java.util.List;
 
 
@@ -17,17 +18,18 @@ import java.util.List;
 @AllArgsConstructor
 public class User {
     private Integer userId;
-
     @Range(message = "最少1个字符，最多30个字符",min = 1, max = 40)
     private String userName;
-
+    @Max(100)
     private String email;
 
-    @Range(message = "最少要6个字符，最多40个字符", min = 6, max = 40)
-    private String password;
+    private String salt;
+    private String saltPassword;
 
-    private List<Host> linkHosts = new LinkedList<Host>();
+    private List<Host> linkHosts;
 
-    private Host myHost;
-
+    public void setSaltPassword(String password) {
+        this.salt = SaltMD5Utils.generateSalt();
+        this.saltPassword = SaltMD5Utils.generateSaltPassword(salt + password, salt);
+    }
 }

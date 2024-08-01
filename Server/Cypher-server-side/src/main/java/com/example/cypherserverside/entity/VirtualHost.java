@@ -11,12 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class VirtualHost {
     private Integer hostId;
-
     private String hostName;
-
-    private String hostIp;
-
-    private SysData virtualHostSysData;
-
+    private String hostIP;
     private Boolean hostStatus;
 }

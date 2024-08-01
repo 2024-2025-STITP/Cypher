@@ -12,9 +12,11 @@ import java.util.Map;
 @Getter
 public class ProcessData {
     // Processes data
-    private Integer pid;
-    private String pname;
-    private double processCpuUsage;
-    private long processMemoryUsage;
+    private int pid;
+    private String pName;
+    private float processCpuUsage;
+    private float processMemoryUsage;
     private boolean status; //open and close
+
+    private int sysDataId;
 }
