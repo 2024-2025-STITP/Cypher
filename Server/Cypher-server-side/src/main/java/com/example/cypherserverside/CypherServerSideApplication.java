@@ -1,5 +1,6 @@
 package com.example.cypherserverside;
 
+import com.example.cypherserverside.utils.SaltMD5Utils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

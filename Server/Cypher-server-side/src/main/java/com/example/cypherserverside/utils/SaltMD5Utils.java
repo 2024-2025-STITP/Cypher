@@ -31,21 +31,23 @@ public class SaltMD5Utils {
         int length = password.length() * 2;
         char[] cs = new char[length];
         for(int i = 0; i < length; i += 2){
-            cs[i] = password.charAt(i);
-            cs[i + 1] = salt.charAt(i % saltLength);
+            cs[i] = password.charAt(i / 2);
+            cs[i + 1] = salt.charAt((i / 2) % saltLength);
         }
         return new String(cs);
     }
 
     //输入的明文和salt密码验证
     public static Boolean validateSaltPassword(String password, String salt, String saltPassword){
+        password = md5Hex(password + salt);
+
         int length = password.length() * 2;
         char[] cs = new char[length];
         for(int i = 0; i < length; i += 2){
-            cs[i] = password.charAt(i);
-            cs[i + 1] = salt.charAt(i % saltLength);
+            cs[i] = password.charAt(i / 2);
+            cs[i + 1] = salt.charAt((i / 2) % saltLength);
         }
-        return salt.equals(new String(cs));
+        return saltPassword.equals(new String(cs));
     }
 
     //(不使用)加密明文和盐混合
