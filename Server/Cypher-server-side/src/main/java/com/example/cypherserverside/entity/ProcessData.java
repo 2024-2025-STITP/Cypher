@@ -17,6 +17,4 @@ public class ProcessData {
     private float processCpuUsage;
     private float processMemoryUsage;
     private boolean status; //open and close
-
-    private int sysDataId;
 }

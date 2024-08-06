@@ -1,11 +1,15 @@
 package com.example.cypherserverside.utils;
 
+import lombok.Data;
 import org.apache.commons.codec.binary.Hex;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 import java.util.Random;
 
+@Data
+@Component
 public class SaltMD5Utils {
 
     private static final Integer saltLength = 8;
