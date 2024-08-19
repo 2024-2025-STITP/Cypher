@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -24,6 +27,10 @@ public class JwtUtils {
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private static String issuer;
+    @Value("${spring.security.oauth2.resourceserver.opaquetoken.client-secret}")
+    private static String secretKey;
+
+
     //生成Token
     public static String GeneateToken(User user)
     {
@@ -37,7 +44,7 @@ public class JwtUtils {
                 .withExpiresAt(calendar.getTime())
                 .withClaim("userName", user.getUserName())
                 .withClaim("userEmail",user.getEmail())
-                .sign(Algorithm.HMAC256(user.getUserId() + "cypher user id"));
+                .sign(Algorithm.HMAC256(secretKey));
     }
 
     //验证Token合理性,secret传的是用户的id

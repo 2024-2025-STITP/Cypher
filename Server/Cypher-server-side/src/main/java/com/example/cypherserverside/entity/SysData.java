@@ -4,16 +4,17 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.*;
 
 @Data
 @Getter
 @Setter
 public class SysData {
-    private long id;
+
     // CPU data
     private double cpuUsage;
-    private double[] perCoreUsage;
 
     // Memory data
     private long totalMemory;
@@ -45,7 +46,7 @@ public class SysData {
     private List<String> systemLogs;
 
     // System uptime
-    private long uptime; // in seconds
+    private LocalTime uptime; // in seconds
 
 
 }

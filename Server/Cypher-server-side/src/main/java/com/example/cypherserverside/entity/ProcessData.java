@@ -14,7 +14,6 @@ public class ProcessData {
     // Processes data
     private int pid;
     private String pName;
-    private float processCpuUsage;
-    private float processMemoryUsage;
-    private boolean status; //open and close
+    private double processCpuUsage;
+    private double processMemoryUsage;
 }
