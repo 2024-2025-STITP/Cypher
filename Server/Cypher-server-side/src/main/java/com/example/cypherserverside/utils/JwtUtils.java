@@ -3,25 +3,17 @@ package com.example.cypherserverside.utils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.impl.ClaimsHolder;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.cypherserverside.entity.User;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.stereotype.Component;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
-@Data
+
 @Component
 public class JwtUtils {
 
@@ -44,6 +36,7 @@ public class JwtUtils {
                 .withExpiresAt(calendar.getTime())
                 .withClaim("userName", user.getUserName())
                 .withClaim("userEmail",user.getEmail())
+                .withClaim("role", user.getRole().getRoleName())
                 .sign(Algorithm.HMAC256(secretKey));
     }
 

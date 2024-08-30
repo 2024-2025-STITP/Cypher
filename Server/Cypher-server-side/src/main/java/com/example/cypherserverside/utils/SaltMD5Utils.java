@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.security.MessageDigest;
 import java.util.Random;
 
-@Data
+
 @Component
 public class SaltMD5Utils {
 
