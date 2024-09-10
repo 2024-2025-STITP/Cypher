@@ -6,8 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.cypherserverside.entity.User;
-import org.springframework.beans.factory.annotation.Value;
+import com.example.cypherserverside.pojo.User;
 import org.springframework.stereotype.Component;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,10 +16,10 @@ import java.util.Map;
 @Component
 public class JwtUtils {
 
-    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-    private static String issuer;
-    @Value("${spring.security.oauth2.resourceserver.opaquetoken.client-secret}")
-    private static String secretKey;
+
+    private final static String issuer = "http://localhost:8080";
+
+    private final static String secretKey = "bEn2xiAnG0mU2TERITERI0YOu5HzH0hE1CwJ1GOnG1tOnG6kAifAwAnchEnG";
 
 
     //生成Token
@@ -56,6 +55,7 @@ public class JwtUtils {
     public static Map<String, Claim> getTokenObject(String token){
         DecodedJWT jwt = JWT.decode(token);
         Map<String, Claim>  claims = jwt.getClaims();
+        claims.get("password").asString();
         return claims;
     }
 }
