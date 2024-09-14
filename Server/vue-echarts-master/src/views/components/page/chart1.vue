@@ -17,6 +17,7 @@ export default {
   methods: {
     // 初始化图表
     setChart() {
+     
       let option = {
         title: { text: "CPU利用率" },
         tooltip: {},
@@ -30,8 +31,8 @@ export default {
               {
                 name: "CPU已使用",
                 // 后端传来的数据
-                // value: this.data.cpuUsage,
-                value: 60,  //测试数据
+                value: this.data.cpuUsage,
+                // value: 60,  //测试数据
                 label: {
                   show: true,
                   position: "center",
@@ -52,8 +53,8 @@ export default {
               {
                 name: "CPU未使用",
                 // 后端传来的数据(或者直接计算得来)
-                // value: totalCpu - this.chartData.cpuUsage,
-                value: 40,
+                value: 16 - this.data.cpuUsage,
+                // value: 40,
                 itemStyle: { color: "#ccc" },
                 label: { show: false },
                 labelLine: { show: true },
@@ -72,20 +73,18 @@ export default {
     // 设置 WebSocket 连接
     setupWebSocket() {
       // 连接
-      this.ws = new WebSocket("ws://localhost:8080/ws/url");
+      this.ws = new WebSocket("ws://localhost:8081/ws/url");
 
       this.ws.onopen = () => {
         console.log("WebSocket 连接成功");
-        socket.send("Hello, Server!");
+        this.ws.send("Hello, Server!");
       };
 
       this.ws.onmessage = (event) => {
         try {
           // 解析从服务器接收到的数据
           const data = JSON.parse(event.data);
-          this.chartData = {
-            cpuUsage: data.cpuUsage || 0,
-          };
+          this.data.cpuUsage = data.cpuUsage || 0 ;
           // 更新图表
           this.setChart();
         } catch (error) {
@@ -103,7 +102,8 @@ export default {
     },
   },
   mounted() {
-    this.setChart(), this.setupWebSocket();
+    this.setChart(),
+    this.setupWebSocket();
   },
 };
 </script>

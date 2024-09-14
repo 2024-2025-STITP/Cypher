@@ -14,7 +14,7 @@
 	<name>Cypher-server-side</name>
 	<description>Cypher-server-side</description>
 	<properties>
-		<java.version>20</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,7 +49,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<scope>annotationProcessor</scope>
+			<scope>provided</scope>
 
 		</dependency>
 		<!---jwt-->

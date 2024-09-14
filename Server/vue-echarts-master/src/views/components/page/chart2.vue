@@ -14,40 +14,32 @@ export default {
         usedMemory: [],
         availableMemory: [],
         cachedMemory: [],
-        swapTotal: [],
-        swapUsed: []
       },
     };
   },
   methods: {
     setChart() {
       let option = {
-        title: {
-          text: "内存使用量动态监控",
-        },
         tooltip: {
           trigger: "axis",
           formatter: function (params) {
-            params = params[0];
-            var date = new Date(params.name);
-            return (
-              date.getHours() +
-              ":" +
-              ("0" + date.getMinutes()).slice(-2) +
-              ":" +
-              ("0" + date.getSeconds()).slice(-2) +
-              " : " +
-              "Total: " + params.value[0] + " MB\n" +
-              "Used: " + params.value[1] + " MB\n" +
-              "Available: " + params.value[2] + " MB\n" +
-              "Cached: " + params.value[3] + " MB\n" +
-              "Swap Total: " + params.value[4] + " MB\n" +
-              "Swap Used: " + params.value[5] + " MB"
-            );
+            let tooltipHtml = "";
+            params.forEach((param) => {
+              let value = param.value[1].toFixed(2); // 保留两位小数
+              tooltipHtml += param.seriesName + ": " + value + " MB\n";
+            });
+            return tooltipHtml;
           },
           axisPointer: {
             animation: false,
           },
+        },
+
+        legend: {
+          textStyle: {
+            color: "#aaa",
+          },
+          data: ["内存总量", "内存使用量", "可用内存", "缓存内存"],
         },
         xAxis: {
           type: "time",
@@ -61,10 +53,16 @@ export default {
           splitLine: {
             show: false,
           },
-          min: 0, // 设置 y 轴的最小值为 0
-          max: 300, // 设置 y 轴的最大值为 300 MB
+          min: 0, // 初始设置为 0
+          max: 15000, // 初始设置为一个大值
         },
         series: [
+          {
+            name: "内存总量",
+            type: "line",
+            showSymbol: false,
+            data: this.data.totalMemory,
+          },
           {
             name: "内存使用量",
             type: "line",
@@ -83,64 +81,96 @@ export default {
             showSymbol: false,
             data: this.data.cachedMemory,
           },
-          {
-            name: "Swap Total",
-            type: "line",
-            showSymbol: false,
-            data: this.data.swapTotal,
-          },
-          {
-            name: "Swap Used",
-            type: "line",
-            showSymbol: false,
-            data: this.data.swapUsed,
-          },
         ],
       };
 
       if (!this.myChart) this.myChart = this.$echarts(this.$el);
-      this.myChart.clear();
-      this.myChart.resize();
       this.myChart.setOption(option);
     },
 
     updateChart(newData) {
-      // 更新图表数据
-      for (let key in this.data) {
-        this.data[key].shift();  // 移除旧数据
-        this.data[key].push(newData[key]);  // 添加新数据
+      // 打印传入的新数据
+      // console.log("Updating chart with new data:", newData);
+
+      // 确保数据已定义，然后将其添加到对应数组
+      if (newData) {
+        const currentTime = new Date().getTime();
+
+        // 将数据转换为 MB 单位
+        const totalMemoryMB = newData.totalMemory / (1024 * 1024);
+        const usedMemoryMB = newData.usedMemory / (1024 * 1024);
+        const availableMemoryMB = newData.availableMemory / (1024 * 1024);
+        const cachedMemoryMB = newData.cachedMemory / (1024 * 1024);
+
+        this.data.totalMemory.push([currentTime, totalMemoryMB]);
+        this.data.usedMemory.push([currentTime, usedMemoryMB]);
+        this.data.availableMemory.push([currentTime, availableMemoryMB]);
+        this.data.cachedMemory.push([currentTime, cachedMemoryMB]);
+
+        // 如果希望限制存储的数据数量，可以考虑移除旧值，例如只保留最近10个点
+        if (this.data.totalMemory.length > 100) {
+          // 假设只保留最近100个数据点
+          this.data.totalMemory.shift();
+          this.data.usedMemory.shift();
+          this.data.availableMemory.shift();
+          this.data.cachedMemory.shift();
+        }
+
+        // 打印更新后的图表数据
+        console.log("Updated chart data:", this.data);
+
+        // 计算新的 min 和 max 值
+        const allData = [
+          ...this.data.totalMemory,
+          ...this.data.usedMemory,
+          ...this.data.availableMemory,
+          ...this.data.cachedMemory,
+        ];
+        const values = allData.map((d) => d[1]);
+        const maxValue = Math.max(...values);
+
+        // 更新图表数据
+
+        this.myChart.setOption({
+          series: [
+            { data: this.data.totalMemory },
+            { data: this.data.usedMemory },
+            { data: this.data.availableMemory },
+            { data: this.data.cachedMemory },
+          ],
+          yAxis: {
+            min: 0,
+            max: maxValue,
+          },
+        });
+      } else {
+        console.error("New data is not defined or has invalid structure.");
       }
-      
-      this.myChart.setOption({
-        series: [
-          { data: this.data.usedMemory },
-          { data: this.data.availableMemory },
-          { data: this.data.cachedMemory },
-          { data: this.data.swapTotal },
-          { data: this.data.swapUsed },
-        ],
-      });
     },
 
     setupWebSocket() {
       // WebSocket 服务器地址
-      this.ws = new WebSocket("ws://localhost:8080/ws/url");
+      this.ws = new WebSocket("ws://localhost:8081/ws/url");
 
       this.ws.onopen = () => {
         console.log("WebSocket 连接成功");
-        socket.send("Hello, Server!");
+        this.ws.send("Hello, Server!");
       };
 
       this.ws.onmessage = (event) => {
         try {
-          // 解析从 WebSocket 服务器接收到的数据
           const receivedData = JSON.parse(event.data);
-          const { timestamp, totalMemory, usedMemory, availableMemory, cachedMemory, swapTotal, swapUsed } = receivedData;
+          console.log("Received data:", receivedData); // 添加此行查看接收到的数据
+
+          const { totalMemory, usedMemory, availableMemory, cachedMemory } =
+            receivedData;
 
           // 生成新的数据点
           const newData = {
-            name: new Date(timestamp).toString(),
-            value: [totalMemory, usedMemory, availableMemory, cachedMemory, swapTotal, swapUsed],
+            totalMemory,
+            usedMemory,
+            availableMemory,
+            cachedMemory,
           };
 
           this.updateChart(newData);
@@ -152,10 +182,10 @@ export default {
       this.ws.onclose = () => {
         console.log("WebSocket 连接关闭");
       };
-      
-      this.ws.onerror = (error) =>{
-        console.log('WebSocket 发生错误:',error)
-      }
+
+      this.ws.onerror = (error) => {
+        console.log("WebSocket 发生错误:", error);
+      };
     },
   },
   mounted() {
