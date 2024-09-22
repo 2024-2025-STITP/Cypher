@@ -3,10 +3,7 @@ package com.example.cypherserverside.entity;
 import com.example.cypherserverside.utils.SaltMD5Utils;
 import com.sun.jna.WString;
 import jakarta.validation.constraints.Max;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Range;
 
 
@@ -18,6 +15,7 @@ import java.util.List;
 @Data
 @Setter
 @Getter
+@RequiredArgsConstructor
 @AllArgsConstructor
 public class User {
     private Integer userId;
@@ -28,9 +26,9 @@ public class User {
 
     private String salt;
     private String saltPassword;
-    private Role role = new Role("tourist", new ArrayList<>());
+    private int  role;//0为游客，1为管理员
 
-    private List<Host> linkHosts;
+    private List<Host> linkHosts = new ArrayList<>();
 
     public void setSaltPassword(String password) {
         this.salt = SaltMD5Utils.generateSalt();
